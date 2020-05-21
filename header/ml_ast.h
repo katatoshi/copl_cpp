@@ -46,40 +46,40 @@ class IfExp;
 using Exp = std::variant<
     IntExp,
     BoolExp,
-    std::shared_ptr<OpExp>,
-    std::shared_ptr<IfExp>
+    std::shared_ptr<const OpExp>,
+    std::shared_ptr<const IfExp>
 >;
 
 std::string exp_to_string(const Exp & exp);
 
 class OpExp {
 public:
-    OpExp(std::shared_ptr<Exp> exp_left, Prim op, std::shared_ptr<Exp> exp_right)
+    OpExp(std::shared_ptr<const Exp> exp_left, Prim op, std::shared_ptr<const Exp> exp_right)
         : exp_left(exp_left), op(op), exp_right(exp_right) {
     }
 
-    const std::shared_ptr<Exp> exp_left;
+    const std::shared_ptr<const Exp> exp_left;
 
     const Prim op;
 
-    const std::shared_ptr<Exp> exp_right;
+    const std::shared_ptr<const Exp> exp_right;
 
     std::string to_string() const;
 };
 
 class IfExp {
 public:
-    IfExp(std::shared_ptr<Exp> exp_cond,
-          std::shared_ptr<Exp> exp_true,
-          std::shared_ptr<Exp> exp_false)
+    IfExp(std::shared_ptr<const Exp> exp_cond,
+          std::shared_ptr<const Exp> exp_true,
+          std::shared_ptr<const Exp> exp_false)
         : exp_cond(exp_cond), exp_true(exp_true), exp_false(exp_false) {
     }
 
-    const std::shared_ptr<Exp> exp_cond;
+    const std::shared_ptr<const Exp> exp_cond;
 
-    const std::shared_ptr<Exp> exp_true;
+    const std::shared_ptr<const Exp> exp_true;
 
-    const std::shared_ptr<Exp> exp_false;
+    const std::shared_ptr<const Exp> exp_false;
 
     std::string to_string() const;
 };

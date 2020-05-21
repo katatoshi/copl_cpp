@@ -71,11 +71,11 @@ std::string exp_to_string(const Exp & exp) {
             return bool_exp ? "true" : "false";
         }
 
-        std::string operator()(const std::shared_ptr<OpExp> & op_exp) {
+        std::string operator()(const std::shared_ptr<const OpExp> & op_exp) {
             return op_exp->to_string();
         }
 
-        std::string operator()(const std::shared_ptr<IfExp> & if_exp) {
+        std::string operator()(const std::shared_ptr<const IfExp> & if_exp) {
             return if_exp->to_string();
         }
     };
