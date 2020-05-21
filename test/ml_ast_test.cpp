@@ -19,16 +19,18 @@ protected:
 }
 
 TEST_F(MLASTTest, TestIntValueToString) {
-    Value value = 2;
+    IntValue int_value = 2;
+    auto value = std::make_shared<const Value>(int_value);
 
-    auto actual = value_to_string(value);
+    auto actual = value_to_string(*value);
     EXPECT_EQ("2", actual);
 }
 
 TEST_F(MLASTTest, TestBoolValueToString) {
-    Value value = true;
+    BoolValue bool_value = true;
+    auto value = std::make_shared<const Value>(bool_value);
 
-    auto actual = value_to_string(value);
+    auto actual = value_to_string(*value);
     EXPECT_EQ("true", actual);
 }
 
