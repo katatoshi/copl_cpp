@@ -53,27 +53,19 @@ std::shared_ptr<const Result> MLInterpreter::evaluate(const std::shared_ptr<cons
                 const IntValue int_value_right;
 
                 std::shared_ptr<const Result> operator()(const Plus &) {
-                    Value value = int_value_left + int_value_right;
-                    return std::make_shared<const Result>(value);
-//                     return std::make_shared<const Result>(int_value_left + int_value_right);
+                    return std::make_shared<const Result>(int_value_left + int_value_right);
                 }
 
                 std::shared_ptr<const Result> operator()(const Minus&) {
-                    Value value = int_value_left - int_value_right;
-                    return std::make_shared<const Result>(value);
-//                     return std::make_shared<const Result>(int_value_left - int_value_right);
+                    return std::make_shared<const Result>(int_value_left - int_value_right);
                 }
 
                 std::shared_ptr<const Result> operator()(const Times &) {
-                    Value value = int_value_left * int_value_right;
-                    return std::make_shared<const Result>(value);
-//                     return std::make_shared<const Result>(int_value_left * int_value_right);
+                    return std::make_shared<const Result>(int_value_left * int_value_right);
                 }
 
                 std::shared_ptr<const Result> operator()(const Lt &) {
-                    Value value = int_value_left < int_value_right;
-                    return std::make_shared<const Result>(value);
-//                     return std::make_shared<const Result>(int_value_left < int_value_right);
+                    return std::make_shared<const Result>(int_value_left < int_value_right);
                 }
             };
 
