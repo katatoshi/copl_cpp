@@ -17,7 +17,7 @@ TLIBS     = $(LIBS)
 TINCLUDES = $(INCLUDES)
 
 RTARGETS = ml
-DTARGETS = ml
+DTARGETS = ml_debug
 TTARGETS = ml_test
 
 RTARGETDIR = ./bin/release
@@ -89,7 +89,7 @@ run_test: rebuild_test
 clean_all: clean clean_debug clean_test
 
 # 8. ターゲット実行ファイルの生成
-$(RTAGETS): $(ROBJ)
+$(RTARGETS): $(ROBJLIST)
 	@echo "$^"
 	@if [ ! -e $(RTARGETDIR) ]; then mkdir -p $(RTARGETDIR); fi
 	$(CXX) -o $(RTARGETDIR)/$@ $^ $(RLDFLAGS) $(RLIBS)
