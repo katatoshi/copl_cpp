@@ -9,7 +9,7 @@ namespace copl::ml {
 
 class MLInterpreter {
 public:
-    std::shared_ptr<const Value> evaluate(const std::shared_ptr<const Exp> & exp);
+    std::shared_ptr<const Result> evaluate(const std::shared_ptr<const Exp> & exp);
 };
 }
 

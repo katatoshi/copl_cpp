@@ -7,6 +7,8 @@
 
 namespace copl::ml {
 
+class Error {};
+
 using IntValue = int;
 
 using BoolValue = bool;
@@ -17,6 +19,11 @@ using Value = std::variant<
 >;
 
 std::string value_to_string(const Value & value);
+
+using Result = std::variant<
+    Error,
+    Value
+>;
 
 class Plus {};
 

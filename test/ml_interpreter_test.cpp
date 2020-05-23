@@ -24,10 +24,13 @@ TEST_F(MLInterpreterTest, TestEvaluateIntExp) {
     IntExp int_exp = -1;
     auto exp = std::make_shared<const Exp>(int_exp);
 
-    auto value = interpreter.evaluate(exp);
-    EXPECT_EQ(true, std::holds_alternative<IntValue>(*value));
+    auto result = interpreter.evaluate(exp);
+    EXPECT_EQ(true, std::holds_alternative<Value>(*result));
 
-    auto actual = std::get<IntValue>(*value);
+    auto value = std::get<Value>(*result);
+    EXPECT_EQ(true, std::holds_alternative<IntValue>(value));
+
+    auto actual = std::get<IntValue>(value);
     EXPECT_EQ(-1, actual);
 }
 
@@ -35,10 +38,13 @@ TEST_F(MLInterpreterTest, TestEvaluateBoolExp) {
     BoolExp bool_exp = false;
     auto exp = std::make_shared<const Exp>(bool_exp);
 
-    auto value = interpreter.evaluate(exp);
-    EXPECT_EQ(true, std::holds_alternative<BoolValue>(*value));
+    auto result = interpreter.evaluate(exp);
+    EXPECT_EQ(true, std::holds_alternative<Value>(*result));
 
-    auto actual = std::get<BoolValue>(*value);
+    auto value = std::get<Value>(*result);
+    EXPECT_EQ(true, std::holds_alternative<BoolValue>(value));
+
+    auto actual = std::get<BoolValue>(value);
     EXPECT_EQ(false, actual);
 }
 
@@ -52,10 +58,13 @@ TEST_F(MLInterpreterTest, TestEvaluatePlusOpExp) {
     auto op_exp = std::make_shared<const OpExp>(exp_left, Plus(), exp_right);
     auto exp = std::make_shared<const Exp>(op_exp);
 
-    auto value = interpreter.evaluate(exp);
-    EXPECT_EQ(true, std::holds_alternative<IntValue>(*value));
+    auto result = interpreter.evaluate(exp);
+    EXPECT_EQ(true, std::holds_alternative<Value>(*result));
 
-    auto actual = std::get<IntValue>(*value);
+    auto value = std::get<Value>(*result);
+    EXPECT_EQ(true, std::holds_alternative<IntValue>(value));
+
+    auto actual = std::get<IntValue>(value);
     EXPECT_EQ(-2, actual);
 }
 
@@ -69,10 +78,13 @@ TEST_F(MLInterpreterTest, TestEvaluateMinusOpExp) {
     auto op_exp = std::make_shared<const OpExp>(exp_left, Minus(), exp_right);
     auto exp = std::make_shared<const Exp>(op_exp);
 
-    auto value = interpreter.evaluate(exp);
-    EXPECT_EQ(true, std::holds_alternative<IntValue>(*value));
+    auto result = interpreter.evaluate(exp);
+    EXPECT_EQ(true, std::holds_alternative<Value>(*result));
 
-    auto actual = std::get<IntValue>(*value);
+    auto value = std::get<Value>(*result);
+    EXPECT_EQ(true, std::holds_alternative<IntValue>(value));
+
+    auto actual = std::get<IntValue>(value);
     EXPECT_EQ(13, actual);
 }
 
@@ -86,10 +98,13 @@ TEST_F(MLInterpreterTest, TestEvaluateTimesOpExp) {
     auto op_exp = std::make_shared<const OpExp>(exp_left, Times(), exp_right);
     auto exp = std::make_shared<const Exp>(op_exp);
 
-    auto value = interpreter.evaluate(exp);
-    EXPECT_EQ(true, std::holds_alternative<IntValue>(*value));
+    auto result = interpreter.evaluate(exp);
+    EXPECT_EQ(true, std::holds_alternative<Value>(*result));
 
-    auto actual = std::get<IntValue>(*value);
+    auto value = std::get<Value>(*result);
+    EXPECT_EQ(true, std::holds_alternative<IntValue>(value));
+
+    auto actual = std::get<IntValue>(value);
     EXPECT_EQ(27, actual);
 }
 
@@ -103,10 +118,13 @@ TEST_F(MLInterpreterTest, TestEvaluateLtOpExpTrue) {
     auto op_exp = std::make_shared<const OpExp>(exp_left, Lt(), exp_right);
     auto exp = std::make_shared<const Exp>(op_exp);
 
-    auto value = interpreter.evaluate(exp);
-    EXPECT_EQ(true, std::holds_alternative<BoolValue>(*value));
+    auto result = interpreter.evaluate(exp);
+    EXPECT_EQ(true, std::holds_alternative<Value>(*result));
 
-    auto actual = std::get<BoolValue>(*value);
+    auto value = std::get<Value>(*result);
+    EXPECT_EQ(true, std::holds_alternative<BoolValue>(value));
+
+    auto actual = std::get<BoolValue>(value);
     EXPECT_EQ(true, actual);
 }
 
@@ -120,10 +138,13 @@ TEST_F(MLInterpreterTest, TestEvaluateLtOpExpFalse) {
     auto op_exp = std::make_shared<const OpExp>(exp_left, Lt(), exp_right);
     auto exp = std::make_shared<const Exp>(op_exp);
 
-    auto value = interpreter.evaluate(exp);
-    EXPECT_EQ(true, std::holds_alternative<BoolValue>(*value));
+    auto result = interpreter.evaluate(exp);
+    EXPECT_EQ(true, std::holds_alternative<Value>(*result));
 
-    auto actual = std::get<BoolValue>(*value);
+    auto value = std::get<Value>(*result);
+    EXPECT_EQ(true, std::holds_alternative<BoolValue>(value));
+
+    auto actual = std::get<BoolValue>(value);
     EXPECT_EQ(false, actual);
 }
 
@@ -140,10 +161,13 @@ TEST_F(MLInterpreterTest, TestEvaluateIfExpTrue) {
     auto if_exp = std::make_shared<const IfExp>(exp_cond, exp_true, exp_false);
     auto exp = std::make_shared<const Exp>(if_exp);
 
-    auto value = interpreter.evaluate(exp);
-    EXPECT_EQ(true, std::holds_alternative<IntValue>(*value));
+    auto result = interpreter.evaluate(exp);
+    EXPECT_EQ(true, std::holds_alternative<Value>(*result));
 
-    auto actual = std::get<IntValue>(*value);
+    auto value = std::get<Value>(*result);
+    EXPECT_EQ(true, std::holds_alternative<IntValue>(value));
+
+    auto actual = std::get<IntValue>(value);
     EXPECT_EQ(9, actual);
 }
 
@@ -160,10 +184,13 @@ TEST_F(MLInterpreterTest, TestEvaluateIfExpFalse) {
     auto if_exp = std::make_shared<const IfExp>(exp_cond, exp_true, exp_false);
     auto exp = std::make_shared<const Exp>(if_exp);
 
-    auto value = interpreter.evaluate(exp);
-    EXPECT_EQ(true, std::holds_alternative<IntValue>(*value));
+    auto result = interpreter.evaluate(exp);
+    EXPECT_EQ(true, std::holds_alternative<Value>(*result));
 
-    auto actual = std::get<IntValue>(*value);
+    auto value = std::get<Value>(*result);
+    EXPECT_EQ(true, std::holds_alternative<IntValue>(value));
+
+    auto actual = std::get<IntValue>(value);
     EXPECT_EQ(13, actual);
 }
 
@@ -183,10 +210,13 @@ TEST_F(MLInterpreterTest, Test_Evaluate_LP_3_PLUS_MINUS_6_RP_TIMES_5_IS_MINUS_15
     auto op_exp = std::make_shared<const OpExp>(exp_left, Times(), exp_right);
     auto exp = std::make_shared<const Exp>(op_exp);
 
-    auto value = interpreter.evaluate(exp);
-    EXPECT_EQ(true, std::holds_alternative<IntValue>(*value));
+    auto result = interpreter.evaluate(exp);
+    EXPECT_EQ(true, std::holds_alternative<Value>(*result));
 
-    auto actual = std::get<IntValue>(*value);
+    auto value = std::get<Value>(*result);
+    EXPECT_EQ(true, std::holds_alternative<IntValue>(value));
+
+    auto actual = std::get<IntValue>(value);
     EXPECT_EQ(-15, actual);
 }
 
@@ -206,10 +236,13 @@ TEST_F(MLInterpreterTest, Test_Evaluate_13_LT_LP_17_MINUS_4_RP_IS_FALSE) {
     auto op_exp = std::make_shared<const OpExp>(exp_left, Lt(), exp_right);
     auto exp = std::make_shared<const Exp>(op_exp);
 
-    auto value = interpreter.evaluate(exp);
-    EXPECT_EQ(true, std::holds_alternative<BoolValue>(*value));
+    auto result = interpreter.evaluate(exp);
+    EXPECT_EQ(true, std::holds_alternative<Value>(*result));
 
-    auto actual = std::get<BoolValue>(*value);
+    auto value = std::get<Value>(*result);
+    EXPECT_EQ(true, std::holds_alternative<BoolValue>(value));
+
+    auto actual = std::get<BoolValue>(value);
     EXPECT_EQ(false, actual);
 }
 
@@ -238,10 +271,13 @@ TEST_F(MLInterpreterTest, Test_Evaluate_IF_3_LT_7_THEN_MINUS_7_TIMES_MINUS_4_ELS
     auto if_exp = std::make_shared<const IfExp>(exp_cond, exp_true, exp_false);
     auto exp = std::make_shared<const Exp>(if_exp);
 
-    auto value = interpreter.evaluate(exp);
-    EXPECT_EQ(true, std::holds_alternative<IntValue>(*value));
+    auto result = interpreter.evaluate(exp);
+    EXPECT_EQ(true, std::holds_alternative<Value>(*result));
 
-    auto actual = std::get<IntValue>(*value);
+    auto value = std::get<Value>(*result);
+    EXPECT_EQ(true, std::holds_alternative<IntValue>(value));
+
+    auto actual = std::get<IntValue>(value);
     EXPECT_EQ(28, actual);
 }
 
@@ -268,9 +304,12 @@ TEST_F(MLInterpreterTest, Test_Evaluate_LP_IF_FALSE_THEN_TRUE_ELSE_11_RP_PLUS_MI
     auto op_exp = std::make_shared<const OpExp>(exp_left, Plus(), exp_right);
     auto exp = std::make_shared<const Exp>(op_exp);
 
-    auto value = interpreter.evaluate(exp);
-    EXPECT_EQ(true, std::holds_alternative<IntValue>(*value));
+    auto result = interpreter.evaluate(exp);
+    EXPECT_EQ(true, std::holds_alternative<Value>(*result));
 
-    auto actual = std::get<IntValue>(*value);
+    auto value = std::get<Value>(*result);
+    EXPECT_EQ(true, std::holds_alternative<IntValue>(value));
+
+    auto actual = std::get<IntValue>(value);
     EXPECT_EQ(3, actual);
 }

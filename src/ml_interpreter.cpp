@@ -2,11 +2,7 @@
 
 namespace copl::ml {
 
-std::shared_ptr<const Value> MLInterpreter::evaluate(const std::shared_ptr<const Exp> & exp) {
-    if (!exp) {
-        return std::shared_ptr<const Value>();
-    }
-
+std::shared_ptr<const Result> MLInterpreter::evaluate(const std::shared_ptr<const Exp> & exp) {
     struct visitor {
 
         visitor(MLInterpreter * interpreter)
@@ -15,33 +11,35 @@ std::shared_ptr<const Value> MLInterpreter::evaluate(const std::shared_ptr<const
 
         MLInterpreter * interpreter;
 
-        std::shared_ptr<const Value> operator()(IntExp int_exp) {
+        std::shared_ptr<const Result> operator()(IntExp int_exp) {
             IntValue int_value = int_exp;
-            return std::make_shared<const Value>(int_value);
+            return std::make_shared<const Result>(int_value);
         }
 
-        std::shared_ptr<const Value> operator()(BoolExp bool_exp) {
+        std::shared_ptr<const Result> operator()(BoolExp bool_exp) {
             BoolValue bool_value = bool_exp;
-            return std::make_shared<const Value>(bool_value);
+            return std::make_shared<const Result>(bool_value);
         }
 
-        std::shared_ptr<const Value> operator()(const std::shared_ptr<const OpExp> & op_exp) {
-            auto value_left = interpreter->evaluate(op_exp->exp_left);
-            if (!value_left) {
-                return std::shared_ptr<const Value>();
+        std::shared_ptr<const Result> operator()(const std::shared_ptr<const OpExp> & op_exp) {
+            auto result_left = interpreter->evaluate(op_exp->exp_left);
+            if (!std::holds_alternative<Value>(*result_left)) {
+                return std::make_shared<const Result>(Error());
             }
 
-            if (!std::holds_alternative<IntValue>(*value_left)) {
-                return std::shared_ptr<const Value>();
+            auto value_left = std::get<Value>(*result_left);
+            if (!std::holds_alternative<IntValue>(value_left)) {
+                return std::make_shared<const Result>(Error());
             }
 
-            auto value_right = interpreter->evaluate(op_exp->exp_right);
-            if (!value_right) {
-                return std::shared_ptr<const Value>();
+            auto result_right = interpreter->evaluate(op_exp->exp_right);
+            if (!std::holds_alternative<Value>(*result_right)) {
+                return std::make_shared<const Result>(Error());
             }
 
-            if (!std::holds_alternative<IntValue>(*value_right)) {
-                return std::shared_ptr<const Value>();
+            auto value_right = std::get<Value>(*result_right);
+            if (!std::holds_alternative<IntValue>(value_right)) {
+                return std::make_shared<const Result>(Error());
             }
 
             struct visitor {
@@ -54,53 +52,62 @@ std::shared_ptr<const Value> MLInterpreter::evaluate(const std::shared_ptr<const
 
                 const IntValue int_value_right;
 
-                std::shared_ptr<const Value> operator()(const Plus &) {
-                    return std::make_shared<const Value>(int_value_left + int_value_right);
+                std::shared_ptr<const Result> operator()(const Plus &) {
+                    Value value = int_value_left + int_value_right;
+                    return std::make_shared<const Result>(value);
+//                     return std::make_shared<const Result>(int_value_left + int_value_right);
                 }
 
-                std::shared_ptr<const Value> operator()(const Minus&) {
-                    return std::make_shared<const Value>(int_value_left - int_value_right);
+                std::shared_ptr<const Result> operator()(const Minus&) {
+                    Value value = int_value_left - int_value_right;
+                    return std::make_shared<const Result>(value);
+//                     return std::make_shared<const Result>(int_value_left - int_value_right);
                 }
 
-                std::shared_ptr<const Value> operator()(const Times &) {
-                    return std::make_shared<const Value>(int_value_left * int_value_right);
+                std::shared_ptr<const Result> operator()(const Times &) {
+                    Value value = int_value_left * int_value_right;
+                    return std::make_shared<const Result>(value);
+//                     return std::make_shared<const Result>(int_value_left * int_value_right);
                 }
 
-                std::shared_ptr<const Value> operator()(const Lt &) {
-                    return std::make_shared<const Value>(int_value_left < int_value_right);
+                std::shared_ptr<const Result> operator()(const Lt &) {
+                    Value value = int_value_left < int_value_right;
+                    return std::make_shared<const Result>(value);
+//                     return std::make_shared<const Result>(int_value_left < int_value_right);
                 }
             };
 
-            auto int_value_left = std::get<IntValue>(*value_left);
-            auto int_value_right = std::get<IntValue>(*value_right);
+            auto int_value_left = std::get<IntValue>(value_left);
+            auto int_value_right = std::get<IntValue>(value_right);
             return std::visit(visitor(int_value_left, int_value_right), op_exp->op);
         }
 
-        std::shared_ptr<const Value> operator()(const std::shared_ptr<const IfExp> & if_exp) {
-            auto value_cond = interpreter->evaluate(if_exp->exp_cond);
-            if (!value_cond) {
-                return std::shared_ptr<const Value>();
+        std::shared_ptr<const Result> operator()(const std::shared_ptr<const IfExp> & if_exp) {
+            auto result_cond = interpreter->evaluate(if_exp->exp_cond);
+            if (!std::holds_alternative<Value>(*result_cond)) {
+                return std::make_shared<const Result>(Error());
             }
 
-            if (!std::holds_alternative<BoolValue>(*value_cond)) {
-                return std::shared_ptr<const Value>();
+            auto value_cond = std::get<Value>(*result_cond);
+            if (!std::holds_alternative<BoolValue>(value_cond)) {
+                return std::make_shared<const Result>(Error());
             }
 
-            auto bool_value_cond = std::get<BoolValue>(*value_cond);
+            auto bool_value_cond = std::get<BoolValue>(value_cond);
             if (bool_value_cond) {
-                auto value_true = interpreter->evaluate(if_exp->exp_true);
-                if (!value_true) {
-                    return std::shared_ptr<const Value>();
+                auto result_true = interpreter->evaluate(if_exp->exp_true);
+                if (!std::holds_alternative<Value>(*result_true)) {
+                    return std::make_shared<const Result>(Error());
                 }
 
-                return value_true;
+                return result_true;
             } else {
-                auto value_false = interpreter->evaluate(if_exp->exp_false);
-                if (!value_false) {
-                    return std::shared_ptr<const Value>();
+                auto result_false = interpreter->evaluate(if_exp->exp_false);
+                if (!std::holds_alternative<Value>(*result_false)) {
+                    return std::make_shared<const Result>(Error());
                 }
 
-                return value_false;
+                return result_false;
             }
         }
     };
