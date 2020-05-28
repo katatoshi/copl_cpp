@@ -2,7 +2,7 @@ CXX       = g++
 CXXFLAGS  = -std=c++17 -Wall
 LDFLAGS   =
 LIBS      =
-INCLUDES  = -I./header
+INCLUDES  =
 RCXXFLAGS = $(CXXFLAGS) -O3
 RLDFLAGS  = $(LDFLAGS)
 RLIBS     = $(LIBS)
@@ -14,7 +14,7 @@ DINCLUDES = $(INCLUDES)
 TCXXFLAGS = $(CXXFLAGS) -pthread
 TLDFLAGS  = $(LDFLAGS) -lgtest
 TLIBS     = $(LIBS)
-TINCLUDES = $(INCLUDES)
+TINCLUDES = $(INCLUDES) -I./src
 
 RTARGETS = ml
 DTARGETS = ml_debug
