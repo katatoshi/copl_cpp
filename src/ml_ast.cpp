@@ -82,4 +82,53 @@ std::string exp_to_string(const Exp & exp) {
 
     return std::visit(visitor(), exp);
 }
+
+std::shared_ptr<const Exp> create_int_exp(IntExp int_exp) {
+    return std::make_shared<const Exp>(int_exp);
+}
+
+std::shared_ptr<const Exp> create_bool_exp(BoolExp bool_exp) {
+    return std::make_shared<const Exp>(bool_exp);
+}
+
+std::shared_ptr<const Exp> create_plus_op_exp(
+    const std::shared_ptr<const Exp> & exp_left,
+    const std::shared_ptr<const Exp> & exp_right
+) {
+    auto op_exp = std::make_shared<const OpExp>(exp_left, Plus(), exp_right);
+    return std::make_shared<const Exp>(op_exp);
+}
+
+std::shared_ptr<const Exp> create_minus_op_exp(
+    const std::shared_ptr<const Exp> & exp_left,
+    const std::shared_ptr<const Exp> & exp_right
+) {
+    auto op_exp = std::make_shared<const OpExp>(exp_left, Minus(), exp_right);
+    return std::make_shared<const Exp>(op_exp);
+}
+
+std::shared_ptr<const Exp> create_times_op_exp(
+    const std::shared_ptr<const Exp> & exp_left,
+    const std::shared_ptr<const Exp> & exp_right
+) {
+    auto op_exp = std::make_shared<const OpExp>(exp_left, Times(), exp_right);
+    return std::make_shared<const Exp>(op_exp);
+}
+
+std::shared_ptr<const Exp> create_lt_op_exp(
+    const std::shared_ptr<const Exp> & exp_left,
+    const std::shared_ptr<const Exp> & exp_right
+) {
+    auto op_exp = std::make_shared<const OpExp>(exp_left, Lt(), exp_right);
+    return std::make_shared<const Exp>(op_exp);
+}
+
+std::shared_ptr<const Exp> create_if_exp(
+    const std::shared_ptr<const Exp> & exp_cond,
+    const std::shared_ptr<const Exp> & exp_true,
+    const std::shared_ptr<const Exp> & exp_false
+) {
+    auto if_exp = std::make_shared<const IfExp>(exp_cond, exp_true, exp_false);
+    return std::make_shared<const Exp>(if_exp);
+}
 }
