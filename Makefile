@@ -31,14 +31,31 @@ TOBJDIR = ./obj/test
 SOURCEDIR  = ./src
 TSOURCEDIR = ./test
 
-TARGETMAINSRC = ml.cpp
+# bison
+BISONSRC = $(SOURCEDIR)/ml_parser.yy
+BISONOUTSRC = $(SOURCEDIR)/ml_parser.tab.cpp
+BISONOUTLIST = \
+	$(SOURCEDIR)/ml_parser.output \
+	$(BISONOUTSRC) \
+	$(SOURCEDIR)/location.hh \
+	$(SOURCEDIR)/ml_parser.tab.hpp \
+	$(SOURCEDIR)/position.hh \
+	$(SOURCEDIR)/stack.hh
+
+# flex
+FLEXSRC = $(SOURCEDIR)/ml_lexer.l
+FLEXOUTSRC = $(SOURCEDIR)/ml_lexer.yy.cpp
+FLEXOUTLIST = $(FLEXOUTSRC)
 
 # 1. サブディレクトリを含むディレクトリリストの生成
 SRCDIRLIST  := $(shell find $(SOURCEDIR) -type d)
 TSRCDIRLIST := $(shell find $(TSOURCEDIR) -type d)
 
 # 2. すべての cpp ファイルのリストの生成
-SRCLIST  = $(foreach srcdir, $(SRCDIRLIST), $(wildcard $(srcdir)/*.cpp))
+OUTSRCLIST = $(BISONOUTSRC) $(FLEXOUTSRC)
+SRCLIST = \
+	$(OUTSRCLIST) \
+	$(filter-out $(OUTSRCLIST), $(foreach srcdir, $(SRCDIRLIST), $(wildcard $(srcdir)/*.cpp)))
 TSRCLIST = $(foreach tsrcdir, $(TSRCDIRLIST), $(wildcard $(tsrcdir)/*.cpp))
 
 # 3. トリミング
@@ -50,8 +67,9 @@ ROBJLIST = $(addprefix $(ROBJDIR)/, $(CUTSRCLIST:.cpp=.o))
 DOBJLIST = $(addprefix $(DOBJDIR)/, $(CUTSRCLIST:.cpp=.o))
 TOBJLIST = $(addprefix $(TOBJDIR)/, $(CUTTSRCLIST:.cpp=.o))
 
-# 5. テスト用に main を含むファイルの除外
-TEMPSRCLIST = $(filter-out %$(TARGETMAINSRC), $(CUTSRCLIST))
+# 5. テストに使用しないファイルの除外
+TEXCLUDELIST = ml.cpp
+TEMPSRCLIST = $(filter-out %$(TEXCLUDELIST), $(CUTSRCLIST))
 TMODULELIST = $(addprefix $(DOBJDIR)/, $(TEMPSRCLIST:.cpp=.o))
 
 # 6. ディレクトリ構造のリスト化
@@ -64,27 +82,38 @@ TOBJDIRLIST = $(addprefix $(TOBJDIR)/, $(TSRCDIRLIST))
 
 build: $(RTARGETS)
 
-clean:
+clean: clean_bison clean_flex
 	rm -f $(ROBJLIST) $(RTARGETDIR)/$(RTARGETS)
 
-rebuild: clean build
+# bison と flex が生成する cpp を生成するルールがないというエラーがでるので一旦コメントアウト
+# rebuild: clean build
 
 build_debug: $(DTARGETS)
 
-clean_debug:
+clean_debug: clean_bison clean_flex
 	rm -f $(DOBJLIST) $(DTARGETDIR)/$(DTARGETS)
 
-rebuild_debug: clean_debug build_debug
+# bison と flex が生成する cpp を生成するルールがないというエラーがでるので一旦コメントアウト
+# rebuild_debug: clean_debug build_debug
 
 build_test: $(DTARGETS) $(TTARGETS)
 
-clean_test:
+clean_test: clean_bison clean_flex
 	rm -f $(TOBJLIST) $(DOBJLIST) $(TTARGETDIR)/$(TTARGETS)
 
-rebuild_test: clean_test build_test
+# bison と flex が生成する cpp を生成するルールがないというエラーがでるので一旦コメントアウト
+# rebuild_test: clean_test build_test
 
-run_test: rebuild_test
+# rebuild_test がうまく動かないので、rebuild_test に依存しない形のものを一旦使う
+# run_test: rebuild_test
+run_test:
 	$(TTARGETDIR)/$(TTARGETS)
+
+clean_bison:
+	rm -f $(BISONOUTLIST)
+
+clean_flex:
+	rm -f $(FLEXOUTLIST)
 
 clean_all: clean clean_debug clean_test
 
@@ -116,3 +145,15 @@ $(DOBJDIR)/%.o: $(SOURCEDIR)/%.cpp
 $(TOBJDIR)/%.o: $(TSOURCEDIR)/%.cpp
 	@if [ ! -e `dirname $@` ]; then mkdir -p `dirname $@`; fi
 	$(CXX) $(TCXXFLAGS) $(TINCLUDES) -o $@ -c $<
+
+$(ROBJDIR)/./%.o: $(SOURCEDIR)/%.cpp
+	@if [ ! -e `dirname $@` ]; then mkdir -p `dirname $@`; fi
+	$(CXX) $(RCXXFLAGS) $(RINCLUDES) -o $@ -c $<
+
+# bison
+$(BISONOUTSRC): $(BISONSRC)
+	bison -dv --output=$@ $<
+
+# flex
+$(FLEXOUTSRC): $(FLEXSRC) $(BISONOUTSRC)
+	flex --outfile=$@ $<
