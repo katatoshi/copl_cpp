@@ -56,7 +56,7 @@ std::shared_ptr<const Result> MLInterpreter::evaluate(const std::shared_ptr<cons
                     return std::make_shared<const Result>(int_value_left + int_value_right);
                 }
 
-                std::shared_ptr<const Result> operator()(const Minus&) {
+                std::shared_ptr<const Result> operator()(const Minus &) {
                     return std::make_shared<const Result>(int_value_left - int_value_right);
                 }
 

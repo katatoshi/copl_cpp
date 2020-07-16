@@ -90,6 +90,36 @@ public:
 
     std::string to_string() const;
 };
+
+std::shared_ptr<const Exp> create_int_exp(IntExp int_exp);
+
+std::shared_ptr<const Exp> create_bool_exp(BoolExp bool_exp);
+
+std::shared_ptr<const Exp> create_plus_op_exp(
+    const std::shared_ptr<const Exp> & exp_left,
+    const std::shared_ptr<const Exp> & exp_right
+);
+
+std::shared_ptr<const Exp> create_minus_op_exp(
+    const std::shared_ptr<const Exp> & exp_left,
+    const std::shared_ptr<const Exp> & exp_right
+);
+
+std::shared_ptr<const Exp> create_times_op_exp(
+    const std::shared_ptr<const Exp> & exp_left,
+    const std::shared_ptr<const Exp> & exp_right
+);
+
+std::shared_ptr<const Exp> create_lt_op_exp(
+    const std::shared_ptr<const Exp> & exp_left,
+    const std::shared_ptr<const Exp> & exp_right
+);
+
+std::shared_ptr<const Exp> create_if_exp(
+    const std::shared_ptr<const Exp> & exp_cond,
+    const std::shared_ptr<const Exp> & exp_true,
+    const std::shared_ptr<const Exp> & exp_false
+);
 }
 
 #endif // ML_AST_H

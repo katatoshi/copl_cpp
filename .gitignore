@@ -1,2 +1,9 @@
 bin/
 obj/
+src/location.hh
+src/ml_lexer.yy.cpp
+src/ml_parser.output
+src/ml_parser.tab.cpp
+src/ml_parser.tab.hpp
+src/position.hh
+src/stack.hh
